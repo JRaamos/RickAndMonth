@@ -1,115 +1,141 @@
 # Checklist do react-redux
 
-*Antes de começar*
+**Antes de começar**
 - [ ] pensar como será o *formato* do seu estado global
 - [ ] pensar quais actions serão necessárias na sua aplicação
 
-*Instalação*
-- [ ] `npm i redux react-redux`
-- [ ] `npm i @redux-devtools/extension`
+**Instalação:**
+- [ ] npm create vite@latest;
+- [ ] npm install –save redux react-redux;
+- [ ] npm install –save @redux-devtools/extension
 
-*Criar dentro do diretório src:*
+**Criar dentro do diretório `src`:**
 - [ ] diretório `redux`
 
-**Criar dentro do diretório `redux`**
-- [ ] diretório `store`
-- [ ] diretório `actions`
-- [ ] diretório `reducers`
+**Criar dentro do diretório `redux`:**
+- [ ] Diretório actions.
+- [ ] Diretório reducers.
+- [ ] Arquivo index.ts.
 
-*Criar dentro do diretório `actions`:*
+**Criar dentro do diretório `actions`:**
 - [ ] arquivo `index.js`.
 
-*Criar dentro do diretório `reducers`:*
+**Criar dentro do diretório `reducers`:**
 - [ ] arquivo `index.js`.
 
-*Criar dentro do diretório `store`:*
-- [ ] arquivo `index.js`.
-
-*Criar dentro do diretório `reducers`:*
-- [ ] criar os reducers necessários
-- [ ] criar `rootReducer` usando o `combineReducers` no arquivo index.js
-
+**Criar dentro do arquivo `redux/index.ts`:**
+- [ ] Importar o createStore.
+- [ ] Configurar o Redux DevTools.
+- [ ] Importar o rootReducer.
+- [ ] Criar e exportar a store.
 
 exemplo:
 
-*Seu reducer pode seguir esse modelo.*
+```js
+import { legacy_createStore as createStore } from 'redux';
+import { composeWithDevTools } from '@redux-devtools/extension';
+import rootReducer from './reducers';
+
+const store = createStore(rootReducer, composeWithDevTools());
+
+export default store;
+````
+
+**Dentro do arquivo `redux/reducers/index.ts`:**
+- [ ] Criar estado inicial.
+- [ ] Criar função reducer com switch retornando apenas a opção default.
+- [ ] Criar rootReducer usando o combineReducers.
+- [ ] Exportar rootReducer.
+
+Exemplo:
 
 ```js
+Copiar
+import { combineReducers } from 'redux';
+
+type ActionType = {
+  type: string,
+};
+
 const INITIAL_STATE = {};
 
-const nomeReducer1 = (state = INITIAL_STATE, action) => {
- switch(action.type) {
-   default:
-    return state;
- }
-}
+const exampleReducer = (state = INITIAL_STATE, action: ActionType) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
 
-export default nomeReducer1;
-
-```
-
-```js
-import { combineReducers } from 'redux';
-import nomeReducer1 from './nomeReducer1';
-import nomeReducer2 from './nomeReducer2';
-
-const rootReducer = combineReducers({
-  nomeReducer1,
-  nomeReducer2,
-});
+const rootReducer = combineReducers({ exampleReducer });
 
 export default rootReducer;
 ```
 
-*No arquivo store/index.js:*
-- [ ] importar `rootReducer` e usá-lo na criação da `store`
-- [ ] configurar o [Redux DevTools](https://github.com/reduxjs/redux-devtools)
-- [ ] exportar a `store`
 
+**No arquivo `./src/main.tsx`**
+- [ ] Importar a store.
+- [ ] Importar o Provider para fornecer os estados a todos os componentes encapsulados pelo <App />.
+
+Exemplo:
 ```js
-import { createStore } from 'redux';
-import { composeWithDevTools } from '@redux-devtools/extension';
-import rootReducer from '../reducers';
-
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(),
-);
-
-export default store;
+// Na importação
+import { Provider } from 'react-redux';
+import store from './redux'
+```
+```js
+// No render
+ <Provider store={ store } >
+   <App />
+ </Provider>
 ```
 
-*No arquivo App.js:*
-- [ ] importar a `store`
-- [ ] definir o Provider, `<Provider store={ store }>`, para fornecer os estados a todos os componentes encapsulados em `<App />`.
-
-*Na pasta actions:*
-- [ ] criar e exportar os actionTypes;`
-- [ ] criar e exportar os actions creators necessários
-
-*Exemplo de action types (arquivo actionTypes.js)*
+**No arquivo `redux/actions/index.ts:`**
+- [ ] Criar e exportar os actionTypes.
+Exemplo:
 
 ```js
-export const USER_LOGIN = 'USER_LOGIN';
-```
-*Exemplo action creator*
-
-```js
-import { USER_LOGIN } from '../actions/actionTypes';
-export const minhaAction = (value) => ({ type: USER_LOGIN, value });
+// ACTIONS TYPES
+export const ADD_EMAIL = 'ADD_EMAIL';
 ```
 
-*Nos reducers:*
-- [ ] criar os casos para cada action criada, retornando o devido estado atualizado
-
-*Nos componentes que irão ler o estado:*
-- [ ] criar a função `mapStateToProps`
-- [ ] exportar usando o `connect`
-
-*Nos componentes que irão modificar o estado:*
-- [ ] criar a função `mapDispatchToProps`
-- [ ] exportar usando o `connect`
+ - [ ] Criar e export os actions creators necessários.
+Exemplo:
 
 ```js
-export default connect(mapStateToProps, mapDispatchToProps)(Component)
+// ACTIONS CREATORS
+export const addEmail = (email) => ({
+  type: ADD_EMAIL,
+  email,
+})
+
+```
+
+Nos `reducers`:
+- [ ] Criar os casos para cada action criada, retornando o devido estado atualizado.
+Nos componentes que irão ler o estado:
+- [ ] Importar o hook useSelector da biblioteca react-redux.
+Exemplo:
+
+```js
+// No import
+import { useSelector } from 'react-redux';
+```
+
+```js
+// No componente
+const rootState = useSelector((state: RootState) => state);
+```
+
+**Nos componentes que modificarão o estado:**
+- [ ] Importar o hook useDispatch da biblioteca react-redux.
+Exemplo:
+
+```js
+// No import
+import { useDispatch } from 'react-redux';
+```
+
+```js
+// No componente
+const dispatch = useDispatch();
 ```
