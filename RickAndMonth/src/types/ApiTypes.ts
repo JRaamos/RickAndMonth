@@ -5,7 +5,7 @@ interface Location {
 }
 
 // Definição de tipo para um personagem
-interface Character {
+export interface Character {
   id: number;
   name: string;
   status: 'Alive' | 'Dead' | 'unknown'; 
@@ -15,7 +15,7 @@ interface Character {
   origin: Location;
   location: Location;
   image: string;
-  episode: string[];
+  episode?: string[];
   url: string;
   created: string; 
 }
